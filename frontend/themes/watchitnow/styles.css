@@ -1,0 +1,42 @@
+@import url('./main-layout.css');
+@import url('./views/movies-view.css');
+@import url('./views/admin-movies-view.css');
+@import url('./views/feed-view.css');
+@import url('./views/movie-view.css');
+@import url('@fontsource/arvo/index.css');    html {
+      --lumo-border-radius-s: calc(var(--lumo-size-m) / 6);
+      --lumo-border-radius-m: calc(var(--lumo-size-m) / 2);
+      --lumo-border-radius-l: var(--lumo-size-m);
+      --lumo-size-xl: 3rem;
+      --lumo-size-l: 2.5rem;
+      --lumo-size-m: 2rem;
+      --lumo-size-s: 1.75rem;
+      --lumo-size-xs: 1.5rem;
+--lumo-font-family: Arvo;
+
+    }
+
+    [theme~="dark"] {
+      --lumo-shade-5pct: hsla(214, 58%, 19%, 0.05);
+      --lumo-shade-10pct: hsla(214, 58%, 19%, 0.1);
+      --lumo-shade-20pct: hsla(214, 58%, 19%, 0.2);
+      --lumo-shade-30pct: hsla(214, 58%, 19%, 0.3);
+      --lumo-shade-40pct: hsla(214, 58%, 19%, 0.4);
+      --lumo-shade-50pct: hsla(214, 58%, 19%, 0.5);
+      --lumo-shade-60pct: hsla(214, 58%, 19%, 0.6);
+      --lumo-shade-70pct: hsla(214, 58%, 19%, 0.7);
+      --lumo-shade-80pct: hsla(214, 58%, 19%, 0.8);
+      --lumo-shade-90pct: hsla(214, 58%, 19%, 0.9);
+      --lumo-primary-color-50pct: hsla(134, 100%, 83%, 0.5);
+      --lumo-primary-color-10pct: hsla(134, 100%, 83%, 0.1);
+      --lumo-error-color-50pct: hsla(3, 100%, 50%, 0.5);
+      --lumo-error-color-10pct: hsla(3, 100%, 50%, 0.1);
+      --lumo-shade: hsl(214, 58%, 19%);
+      --lumo-primary-color: hsla(134, 100%, 83%, 0.71);
+      --lumo-primary-text-color: hsla(156, 48%, 41%, 1);
+      --lumo-error-color: hsl(3, 100%, 50%);
+      --lumo-error-text-color: hsla(359, 70%, 56%, 0.69);
+      --lumo-base-color: hsla(128, 40%, 16%, 0.61);
+      --lumo-body-text-color: hsla(134, 54%, 83%, 0.96);
+
+    }

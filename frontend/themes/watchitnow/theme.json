@@ -1,0 +1,9 @@
+{
+  "lumoImports" : [ "typography", "color", "spacing", "badge", "utility" ],
+  "assets" : {
+    "@fontsource/arvo" : {
+      "*.css" : "@fontsource/arvo",
+      "files/*" : "@fontsource/arvo/files"
+    }
+  }
+}
