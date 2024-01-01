@@ -1,5 +1,5 @@
 package com.example.data;
-
+/*
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -58,3 +58,4 @@ public class User extends AbstractEntity {
     }
 
 }
+*/

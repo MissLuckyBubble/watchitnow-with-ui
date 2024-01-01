@@ -13,12 +13,10 @@ import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.html.H6;
-import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.listbox.MultiSelectListBox;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -37,17 +35,13 @@ import java.util.List;
 public class MovieView extends Composite<VerticalLayout> {
 
     public MovieView() {
-        H1 h1 = new H1();
-        HorizontalLayout layoutRow = new HorizontalLayout();
-        H2 h2 = new H2();
-        H2 h22 = new H2();
-        Hr hr = new Hr();
-        VerticalLayout layoutColumn2 = new VerticalLayout();
-        H6 h6 = new H6();
-        HorizontalLayout layoutRow2 = new HorizontalLayout();
-        H4 h4 = new H4();
-        Icon icon = new Icon();
-        Button buttonPrimary = new Button();
+
+        H1 title = new H1();
+        getContent().add(title);
+
+        createUnderTitleRow();
+
+
         HorizontalLayout layoutRow3 = new HorizontalLayout();
         Span badge = new Span();
         Span badge2 = new Span();
@@ -65,42 +59,9 @@ public class MovieView extends Composite<VerticalLayout> {
         Paragraph textMedium = new Paragraph();
         getContent().setWidth("100%");
         getContent().getStyle().set("flex-grow", "1");
-        h1.setText("Title");
-        h1.setWidth("max-content");
-        layoutRow.setWidthFull();
-        getContent().setFlexGrow(1.0, layoutRow);
-        layoutRow.addClassName(Gap.MEDIUM);
-        layoutRow.setWidth("100%");
-        layoutRow.setHeight("60px");
-        h2.setText("Release date:");
-        h2.setWidth("max-content");
-        h22.setText("11.11.2023");
-        h22.setWidth("max-content");
-        layoutColumn2.setHeightFull();
-        layoutRow.setFlexGrow(1.0, layoutColumn2);
-        layoutColumn2.addClassName(Gap.XSMALL);
-        layoutColumn2.setPadding(false);
-        layoutColumn2.setWidth("630px");
-        layoutColumn2.setHeight("60px");
-        h6.setText("Rating:");
-        layoutColumn2.setAlignSelf(FlexComponent.Alignment.END, h6);
-        h6.setWidth("max-content");
-        layoutRow2.setWidthFull();
-        layoutColumn2.setFlexGrow(1.0, layoutRow2);
-        layoutRow2.addClassName(Gap.MEDIUM);
-        layoutRow2.setWidth("0px");
-        layoutRow2.setMinWidth("630px");
-        layoutRow2.setMaxWidth("630px");
-        layoutRow2.getStyle().set("flex-grow", "1");
-        layoutRow2.setAlignItems(Alignment.START);
-        layoutRow2.setJustifyContentMode(JustifyContentMode.END);
-        h4.setText("8.99");
-        h4.setWidth("20px");
-        h4.setHeight("20px");
-        icon.getElement().setAttribute("icon", "lumo:user");
-        buttonPrimary.setText("Rate");
-        buttonPrimary.setWidth("min-content");
-        buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        title.setText("Title");
+        title.setWidth("max-content");
+
         layoutRow3.setWidthFull();
         getContent().setFlexGrow(1.0, layoutRow3);
         layoutRow3.addClassName(Gap.MEDIUM);
@@ -154,17 +115,7 @@ public class MovieView extends Composite<VerticalLayout> {
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
         textMedium.setWidth("100%");
         textMedium.getStyle().set("font-size", "var(--lumo-font-size-m)");
-        getContent().add(h1);
-        getContent().add(layoutRow);
-        layoutRow.add(h2);
-        layoutRow.add(h22);
-        layoutRow.add(hr);
-        layoutRow.add(layoutColumn2);
-        layoutColumn2.add(h6);
-        layoutColumn2.add(layoutRow2);
-        layoutRow2.add(h4);
-        layoutRow2.add(icon);
-        layoutRow.add(buttonPrimary);
+
         getContent().add(layoutRow3);
         layoutRow3.add(badge);
         layoutRow3.add(badge2);
@@ -180,6 +131,79 @@ public class MovieView extends Composite<VerticalLayout> {
         getContent().add(layoutColumn4);
         layoutColumn4.add(h32);
         layoutColumn4.add(textMedium);
+    }
+
+    private void createUnderTitleRow() {
+        HorizontalLayout underTitleRow = new HorizontalLayout();
+
+        H2 releaseDateLabel = new H2();
+        releaseDateLabel.setText("Release date:");
+        releaseDateLabel.setWidth("max-content");
+        underTitleRow.add(releaseDateLabel);
+
+        createReleseDateText(underTitleRow, "20.20.2023");
+
+
+        VerticalLayout ratingColumn = new VerticalLayout();
+        ratingColumn.setHeightFull();
+        underTitleRow.setFlexGrow(1.0, ratingColumn);
+        ratingColumn.addClassName(Gap.XSMALL);
+        ratingColumn.setPadding(false);
+
+        H6 ratingLabel = new H6();
+        ratingLabel.setText("Rating:");
+        ratingLabel.setWidth("max-content");
+        ratingColumn.add(ratingLabel);
+
+        ratingColumn.setAlignSelf(Alignment.END, ratingLabel);
+        underTitleRow.add(ratingColumn);
+
+
+        HorizontalLayout ratingNumberRow = new HorizontalLayout();
+
+        ratingNumberRow.addClassName(Gap.MEDIUM);
+        ratingNumberRow.setAlignItems(Alignment.END);
+        underTitleRow.setAlignSelf(Alignment.END, ratingNumberRow);
+
+        createRatingText(ratingNumberRow, "8.99");
+
+
+        Icon ratingIcon = new Icon();
+        ratingIcon.getElement().setAttribute("icon", "vaadin:star");
+        ratingNumberRow.add(ratingIcon);
+
+        Button rateButton = new Button();
+        rateButton.setText("Rate");
+        rateButton.setWidth("min-content");
+        rateButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        underTitleRow.setWidthFull();
+
+        getContent().setFlexGrow(1.0, underTitleRow);
+        underTitleRow.addClassName(Gap.MEDIUM);
+        underTitleRow.setWidth("100%");
+        underTitleRow.setHeight("60px");
+
+
+
+        getContent().add(underTitleRow);
+        ratingColumn.add(ratingNumberRow);
+        underTitleRow.add(rateButton);
+    }
+
+    private static void createReleseDateText(HorizontalLayout underTitleRow, String text) {
+        H2 releaseDateText = new H2();
+        releaseDateText.setText(text);
+        releaseDateText.setWidth("max-content");
+        underTitleRow.add(releaseDateText);
+    }
+
+    private static void createRatingText(HorizontalLayout ratingNumberRow, String text) {
+        H4 ratingText = new H4();
+        ratingText.setText(text);
+        ratingText.setWidth("20px");
+        ratingText.setHeight("20px");
+        ratingNumberRow.add(ratingText);
     }
 
     private void setAvatarItemsSampleData(MultiSelectListBox multiSelectListBox) {

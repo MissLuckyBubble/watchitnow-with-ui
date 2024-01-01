@@ -1,6 +1,6 @@
 package com.example.views;
 
-import com.example.data.User;
+import com.example.models.User;
 import com.example.security.AuthenticatedUser;
 import com.example.views.adminmovies.AdminMoviesView;
 import com.example.views.feed.FeedView;
@@ -24,6 +24,7 @@ import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.server.auth.AccessAnnotationChecker;
+import com.vaadin.flow.theme.lumo.LumoUtility;
 import com.vaadin.flow.theme.lumo.LumoUtility.AlignItems;
 import com.vaadin.flow.theme.lumo.LumoUtility.BoxSizing;
 import com.vaadin.flow.theme.lumo.LumoUtility.Display;
@@ -102,14 +103,11 @@ public class MainLayout extends AppLayout {
         appName.addClassNames(Margin.Vertical.MEDIUM, Margin.End.AUTO, FontSize.LARGE);
         layout.add(appName);
 
-        Optional<User> maybeUser = authenticatedUser.get();
+        Optional<com.example.models.User> maybeUser = authenticatedUser.get();
         if (maybeUser.isPresent()) {
             User user = maybeUser.get();
 
-            Avatar avatar = new Avatar(user.getName());
-            StreamResource resource = new StreamResource("profile-pic",
-                    () -> new ByteArrayInputStream(user.getProfilePicture()));
-            avatar.setImageResource(resource);
+            Avatar avatar = new Avatar(user.getUsername());
             avatar.setThemeName("xsmall");
             avatar.getElement().setAttribute("tabindex", "-1");
 
@@ -119,7 +117,7 @@ public class MainLayout extends AppLayout {
             MenuItem userName = userMenu.addItem("");
             Div div = new Div();
             div.add(avatar);
-            div.add(user.getName());
+            div.add(user.getUsername());
             div.add(new Icon("lumo", "dropdown"));
             div.getElement().getStyle().set("display", "flex");
             div.getElement().getStyle().set("align-items", "center");
@@ -132,7 +130,10 @@ public class MainLayout extends AppLayout {
             layout.add(userMenu);
         } else {
             Anchor loginLink = new Anchor("login", "Sign in");
+            loginLink.addClassNames(Margin.Horizontal.MEDIUM);
             layout.add(loginLink);
+            Anchor registerLink = new Anchor("register", "Register");
+            layout.add(registerLink);
         }
 
         Nav nav = new Nav();

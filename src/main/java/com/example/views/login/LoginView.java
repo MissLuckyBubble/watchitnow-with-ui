@@ -1,6 +1,9 @@
 package com.example.views.login;
 
 import com.example.security.AuthenticatedUser;
+import com.example.views.MainLayout;
+import com.vaadin.flow.component.html.Anchor;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.login.LoginI18n;
 import com.vaadin.flow.component.login.LoginOverlay;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -13,7 +16,7 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 
 @AnonymousAllowed
 @PageTitle("Login")
-@Route(value = "login")
+@Route(value = "login", layout = MainLayout.class)
 public class LoginView extends LoginOverlay implements BeforeEnterObserver {
 
     private final AuthenticatedUser authenticatedUser;
@@ -25,8 +28,8 @@ public class LoginView extends LoginOverlay implements BeforeEnterObserver {
         LoginI18n i18n = LoginI18n.createDefault();
         i18n.setHeader(new LoginI18n.Header());
         i18n.getHeader().setTitle("WatchItNow");
-        i18n.getHeader().setDescription("Login using user/user or admin/admin");
-        i18n.setAdditionalInformation(null);
+        i18n.getHeader().setDescription("Login with your credentials");
+        i18n.setAdditionalInformation("");
         setI18n(i18n);
 
         setForgotPasswordButtonVisible(false);
@@ -36,7 +39,6 @@ public class LoginView extends LoginOverlay implements BeforeEnterObserver {
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
         if (authenticatedUser.get().isPresent()) {
-            // Already logged in
             setOpened(false);
             event.forwardTo("");
         }
