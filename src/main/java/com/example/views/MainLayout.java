@@ -2,7 +2,8 @@ package com.example.views;
 
 import com.example.models.User;
 import com.example.security.AuthenticatedUser;
-import com.example.views.adminmovies.AdminMoviesView;
+import com.example.views.admin.adminmovies.AdminMoviesView;
+import com.example.views.admin.genres.GenresView;
 import com.example.views.feed.FeedView;
 import com.example.views.helloworld.HelloWorldView;
 import com.example.views.movie.MovieView;
@@ -22,9 +23,7 @@ import com.vaadin.flow.component.html.UnorderedList;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.router.RouterLink;
-import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.server.auth.AccessAnnotationChecker;
-import com.vaadin.flow.theme.lumo.LumoUtility;
 import com.vaadin.flow.theme.lumo.LumoUtility.AlignItems;
 import com.vaadin.flow.theme.lumo.LumoUtility.BoxSizing;
 import com.vaadin.flow.theme.lumo.LumoUtility.Display;
@@ -40,7 +39,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
 import com.vaadin.flow.theme.lumo.LumoUtility.Whitespace;
 import com.vaadin.flow.theme.lumo.LumoUtility.Width;
-import java.io.ByteArrayInputStream;
+
 import java.util.Optional;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
@@ -162,6 +161,8 @@ public class MainLayout extends AppLayout {
                 new MenuItemInfo("Movies", LineAwesomeIcon.TH_LIST_SOLID.create(), MoviesView.class), //
 
                 new MenuItemInfo("Admin-Movies", LineAwesomeIcon.COLUMNS_SOLID.create(), AdminMoviesView.class), //
+
+                new MenuItemInfo("Genres", LineAwesomeIcon.LIST_SOLID.create(), GenresView.class), //
 
                 new MenuItemInfo("Feed", LineAwesomeIcon.LIST_SOLID.create(), FeedView.class), //
 
