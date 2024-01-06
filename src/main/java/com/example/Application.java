@@ -1,6 +1,8 @@
 package com.example;
 
 import com.example.data.SamplePersonRepository;
+import com.example.models.User;
+import com.example.repo.UserRepo;
 import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.theme.Theme;
@@ -14,6 +16,8 @@ import org.springframework.boot.autoconfigure.sql.init.SqlDataSourceScriptDataba
 import org.springframework.boot.autoconfigure.sql.init.SqlInitializationProperties;
 import org.springframework.context.annotation.Bean;
 
+
+
 /**
  * The entry point of the Spring Boot application.
  *
@@ -21,7 +25,7 @@ import org.springframework.context.annotation.Bean;
  * and some desktop browsers.
  *
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.example.models", "com.example"})
 @NpmPackage(value = "@fontsource/arvo", version = "4.5.0")
 @Theme(value = "watchitnow", variant = Lumo.DARK)
 public class Application implements AppShellConfigurator {
@@ -32,7 +36,7 @@ public class Application implements AppShellConfigurator {
 
     @Bean
     SqlDataSourceScriptDatabaseInitializer dataSourceScriptDatabaseInitializer(DataSource dataSource,
-            SqlInitializationProperties properties, SamplePersonRepository repository) {
+                                                                               SqlInitializationProperties properties, UserRepo repository) {
         // This bean ensures the database is only initialized when empty
         return new SqlDataSourceScriptDatabaseInitializer(dataSource, properties) {
             @Override
@@ -44,8 +48,12 @@ public class Application implements AppShellConfigurator {
             }
         };
     }
+
+
     @Bean
     public ModelMapper modelMapper(){
-        return  new ModelMapper();
+
+        return new ModelMapper();
     }
+
 }

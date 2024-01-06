@@ -20,6 +20,7 @@ public abstract class BaseService <U extends MainModel> {
     public Optional<U> getEntity(Long id){
         return getRepo().findById(id);
     }
+
     public U create(U entity){
         entity.setCreatedAt(LocalDateTime.now());
         return getRepo().save(entity);

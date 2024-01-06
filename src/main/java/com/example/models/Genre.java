@@ -14,5 +14,7 @@ import lombok.Setter;
 @Table(name = "Genres")
 public class Genre extends MainModel {
     @Column(nullable = false)
-    private  String name;
+    private String name;
+    @Column()
+    private String description;
 }

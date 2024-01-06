@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name="Movie_Has_Genres)")
+@Table(name="Movie_Has_Genres")
 public class MovieHasGenre extends MainModel {
 
     @ManyToOne
