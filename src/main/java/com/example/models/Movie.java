@@ -3,6 +3,8 @@ package com.example.models;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,13 +16,14 @@ import java.util.Set;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @Entity
 @Table(name = "Movies")
 public class Movie extends MainModel{
     @Column(nullable = false,length = 255)
+    @NotEmpty(message = "Title is required.")
     private String title;
     @Column(nullable = false)
+    @NotNull(message = "Release Date is required.")
     @JsonFormat(pattern = "dd.MM.yyyy")
     private LocalDate release_date;
     @Column(length = 255)
@@ -30,17 +33,22 @@ public class Movie extends MainModel{
     @Column(nullable = false)
     private String poster_url;
     @JsonIgnore
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(name = "movie_is_on_platform",
             joinColumns = @JoinColumn(name = "movie_id"),
             inverseJoinColumns = @JoinColumn(name = "platform_id")
     )
     private Set<Platform> moviePlatforms = new HashSet<>();
 
-    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "movie", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Cast> movieCast = new HashSet<>();
 
-    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "movie", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private Set<MovieHasGenre> movieGenres = new HashSet<>();
 
+    public Movie(){
+        this.moviePlatforms = new HashSet<>();
+        this.movieCast = new HashSet<>();
+        this.movieGenres = new HashSet<>();
+    }
 }

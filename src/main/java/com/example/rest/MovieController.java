@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@RequestMapping("/movie")
+@RequestMapping("/api-movie")
 @RestController
 public class MovieController {
 
