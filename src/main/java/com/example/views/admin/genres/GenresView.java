@@ -109,7 +109,6 @@ public class GenresView extends Div implements BeforeEnterObserver {
         save.addClickListener(e -> {
 
             try {
-                System.out.println("Entering try block");
                 if (this.genre == null) {
                     this.genre = new Genre();
                     binder.writeBean(this.genre);
@@ -216,7 +215,6 @@ public class GenresView extends Div implements BeforeEnterObserver {
         return new ConfirmDialog("Confirm Delete",
                 "Are you sure you want to delete " + genre.getName() + "?",
                 "Yes", event -> {
-            // User clicked "Yes," perform deletion
             genreService.remove(genre.getId());
             clearForm();
             refreshGrid();

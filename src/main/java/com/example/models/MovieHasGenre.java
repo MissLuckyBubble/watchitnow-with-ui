@@ -21,4 +21,10 @@ public class MovieHasGenre extends MainModel {
     @ManyToOne
     @JoinColumn(name="genre_id")
     private Genre genre;
+
+    public MovieHasGenre(Movie movie, Genre genre) {
+        super();
+        this.movie = movie;
+        this.genre = genre;
+    }
 }
