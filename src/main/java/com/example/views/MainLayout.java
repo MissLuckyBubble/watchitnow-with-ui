@@ -4,6 +4,8 @@ import com.example.models.User;
 import com.example.security.AuthenticatedUser;
 import com.example.views.admin.adminmovies.AdminMoviesView;
 import com.example.views.admin.genres.GenresView;
+import com.example.views.admin.people.AdminPeopleView;
+import com.example.views.admin.platform.PlatformView;
 import com.example.views.feed.FeedView;
 import com.example.views.helloworld.HelloWorldView;
 import com.example.views.movie.MovieView;
@@ -163,6 +165,10 @@ public class MainLayout extends AppLayout {
                 new MenuItemInfo("Admin-Movies", LineAwesomeIcon.COLUMNS_SOLID.create(), AdminMoviesView.class), //
 
                 new MenuItemInfo("Genres", LineAwesomeIcon.LIST_SOLID.create(), GenresView.class), //
+
+                new MenuItemInfo("Platforms", LineAwesomeIcon.LIST_SOLID.create(), PlatformView.class), //
+
+                new MenuItemInfo("People", LineAwesomeIcon.LIST_SOLID.create(), AdminPeopleView.class), //
 
                 new MenuItemInfo("Feed", LineAwesomeIcon.LIST_SOLID.create(), FeedView.class), //
 
