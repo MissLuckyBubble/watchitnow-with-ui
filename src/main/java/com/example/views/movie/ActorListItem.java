@@ -2,12 +2,19 @@ package com.example.views.movie;
 
 import com.example.models.Person;
 import com.example.views.movies.MoviesView;
+import com.example.views.people.ActorView;
 import com.vaadin.flow.component.HtmlContainer;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.QueryParameters;
+import com.vaadin.flow.router.RouteParam;
+import com.vaadin.flow.router.RouteParameters;
 import com.vaadin.flow.router.RouterLink;
+
+import java.util.Collections;
 
 public class ActorListItem extends HorizontalLayout {
 
@@ -34,12 +41,12 @@ public class ActorListItem extends HorizontalLayout {
 
         HorizontalLayout wholeActorItemLayout = new HorizontalLayout();
         wholeActorItemLayout.add(actorImage, actorDetailsContainer);
-        // Create a RouterLink for navigation to the person details page
-        RouterLink link = new RouterLink();
-        link.setRoute(MoviesView.class);
-        link.add(wholeActorItemLayout);
-        add(link);
-
+        wholeActorItemLayout.addClickListener(event ->{
+            QueryParameters parameters =
+                    QueryParameters.simple(Collections.singletonMap("personID",person.getId().toString()));
+            UI.getCurrent().navigate(ActorView.class, parameters);
+        });
+        add(wholeActorItemLayout);
         // Add actor details to the container
         actorDetailsContainer.add(actorNameSpan, roleSpan);
     }

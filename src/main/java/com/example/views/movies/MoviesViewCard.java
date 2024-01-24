@@ -44,7 +44,7 @@ public class MoviesViewCard extends ListItem {
 
         Span header = new Span();
         header.addClassNames(FontSize.XLARGE, FontWeight.SEMIBOLD);
-        header.setText(movie.getTitle());
+        header.setText(movie.getTitle() + " (" + movie.getRelease_date().getYear() + ")");
 
         Span subtitle = new Span();
         subtitle.addClassNames(FontSize.SMALL, TextColor.SECONDARY);
