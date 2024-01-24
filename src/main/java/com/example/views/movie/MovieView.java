@@ -1,90 +1,110 @@
 package com.example.views.movie;
 
 import com.example.components.avataritem.AvatarItem;
+import com.example.models.*;
+import com.example.services.MovieService;
 import com.example.views.MainLayout;
+import com.example.views.movies.MoviesView;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.Uses;
-import com.vaadin.flow.component.html.Anchor;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.component.html.H4;
-import com.vaadin.flow.component.html.H6;
-import com.vaadin.flow.component.html.Paragraph;
-import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.listbox.ListBox;
 import com.vaadin.flow.component.listbox.MultiSelectListBox;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @PageTitle("Movie")
-@Route(value = "my-view", layout = MainLayout.class)
+@Route(value = "movie", layout = MainLayout.class)
 @AnonymousAllowed
 @Uses(Icon.class)
-public class MovieView extends Composite<VerticalLayout> {
+public class MovieView extends Composite<VerticalLayout> implements BeforeEnterObserver {
 
-    public MovieView() {
+    private final MovieService movieService;
+    Movie movie;
 
+    public MovieView(MovieService movieService) {
+        this.movieService = movieService;
+    }
+
+    @Override
+    public void beforeEnter(BeforeEnterEvent event) {
+        QueryParameters parameters = event.getLocation().getQueryParameters();
+        Map<String, List<String>> parametersMap = parameters.getParameters();
+        List<String> movieIdValues = parametersMap.get("movieId");
+        String movieId = movieIdValues.get(0);
+
+        if(movieId != null) {
+            Optional<Movie> optionalMovie = movieService.getEntity(Long.parseLong(movieId));
+            if (optionalMovie.isPresent()) {
+                movie = optionalMovie.get();
+            } else {
+                return;
+            }
+        }else {
+            return;
+        }
         H1 title = new H1();
         getContent().add(title);
+        title.setText(movie.getTitle());
+        title.setWidth("max-content");
 
         createUnderTitleRow();
 
 
         HorizontalLayout layoutRow3 = new HorizontalLayout();
-        Span badge = new Span();
-        Span badge2 = new Span();
+
+        Image posterImage = new Image(movie.getPoster_url(), "Poster");
+        posterImage.setWidth("min-content");
+        posterImage.setMinWidth("400px");
+        posterImage.setHeight("500px");
+
+
+        IFrame youtubePlayer = new IFrame(movie.getTrailer());
+        youtubePlayer.setWidth("100%");
+        youtubePlayer.setHeight("500px");
+        youtubePlayer.setAllow("accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture");
+        youtubePlayer.getElement().setAttribute("allowfullscreen", true);
+        youtubePlayer.getElement().setAttribute("frameborder", "0");
+
+
         HorizontalLayout layoutRow4 = new HorizontalLayout();
-        Button buttonSecondary = new Button();
-        Button buttonSecondary2 = new Button();
+
         HorizontalLayout layoutRow5 = new HorizontalLayout();
-        H4 h42 = new H4();
-        Anchor link = new Anchor();
-        VerticalLayout layoutColumn3 = new VerticalLayout();
-        H3 h3 = new H3();
-        MultiSelectListBox avatarItems = new MultiSelectListBox();
-        VerticalLayout layoutColumn4 = new VerticalLayout();
-        H3 h32 = new H3();
-        Paragraph textMedium = new Paragraph();
-        getContent().setWidth("100%");
-        getContent().getStyle().set("flex-grow", "1");
-        title.setText("Title");
-        title.setWidth("max-content");
+
+
+
+
 
         layoutRow3.setWidthFull();
         getContent().setFlexGrow(1.0, layoutRow3);
         layoutRow3.addClassName(Gap.MEDIUM);
         layoutRow3.setWidth("100%");
         layoutRow3.getStyle().set("flex-grow", "1");
-        badge.setText("Poster");
-        badge.setWidth("min-content");
-        badge.setMinWidth("400px");
-        badge.setHeight("500px");
-        badge.getElement().getThemeList().add("badge");
-        badge2.setText("Trailer");
-        badge2.getStyle().set("flex-grow", "1");
-        badge2.setHeight("500px");
-        badge2.getElement().getThemeList().add("badge");
+
+
+
         layoutRow4.setWidthFull();
         getContent().setFlexGrow(1.0, layoutRow4);
         layoutRow4.addClassName(Gap.MEDIUM);
         layoutRow4.setWidth("100%");
         layoutRow4.getStyle().set("flex-grow", "1");
-        buttonSecondary.setText("Ganre");
-        buttonSecondary.setWidth("min-content");
-        buttonSecondary2.setText("Ganre");
-        buttonSecondary2.setWidth("min-content");
+
+
+
         layoutRow5.setHeightFull();
         layoutRow4.setFlexGrow(1.0, layoutRow5);
         layoutRow5.addClassName(Gap.MEDIUM);
@@ -92,45 +112,103 @@ public class MovieView extends Composite<VerticalLayout> {
         layoutRow5.getStyle().set("flex-grow", "1");
         layoutRow5.setAlignItems(Alignment.CENTER);
         layoutRow5.setJustifyContentMode(JustifyContentMode.END);
-        h42.setText("Where to watch:");
-        h42.setWidth("max-content");
-        link.setText("https://www.Hbo.Max.com/movie-name");
-        link.setHref("#");
-        link.setWidth("min-content");
-        layoutColumn3.setWidthFull();
-        getContent().setFlexGrow(1.0, layoutColumn3);
-        layoutColumn3.setWidth("100%");
-        layoutColumn3.getStyle().set("flex-grow", "1");
-        h3.setText("Cast");
-        h3.setWidth("max-content");
-        avatarItems.setWidth("min-content");
-        setAvatarItemsSampleData(avatarItems);
-        layoutColumn4.setWidthFull();
-        getContent().setFlexGrow(1.0, layoutColumn4);
-        layoutColumn4.setWidth("100%");
-        layoutColumn4.getStyle().set("flex-grow", "1");
-        h32.setText("Storyline");
-        h32.setWidth("max-content");
-        textMedium.setText(
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
-        textMedium.setWidth("100%");
-        textMedium.getStyle().set("font-size", "var(--lumo-font-size-m)");
+
 
         getContent().add(layoutRow3);
-        layoutRow3.add(badge);
-        layoutRow3.add(badge2);
+        layoutRow3.add(posterImage);
+        layoutRow3.add(youtubePlayer);
         getContent().add(layoutRow4);
-        layoutRow4.add(buttonSecondary);
-        layoutRow4.add(buttonSecondary2);
+
+
+        generateGenreButtons(layoutRow4);
+
         layoutRow4.add(layoutRow5);
-        layoutRow5.add(h42);
-        layoutRow5.add(link);
-        getContent().add(layoutColumn3);
-        layoutColumn3.add(h3);
-        layoutColumn3.add(avatarItems);
-        getContent().add(layoutColumn4);
-        layoutColumn4.add(h32);
-        layoutColumn4.add(textMedium);
+        createWhereToWatch(layoutRow5);
+
+        createCastColumn();
+        createDescriptionColumn();
+    }
+
+    private void createDescriptionColumn() {
+        VerticalLayout descriptionColumn = new VerticalLayout();
+        descriptionColumn.setWidthFull();
+        descriptionColumn.setWidth("100%");
+        descriptionColumn.getStyle().set("flex-grow", "1");
+        getContent().setFlexGrow(1.0, descriptionColumn);
+
+        H3 descriptionLabel = new H3();
+        descriptionLabel.setText("Storyline");
+        descriptionLabel.setWidth("max-content");
+
+        Paragraph description = new Paragraph();
+        getContent().setWidth("100%");
+        getContent().getStyle().set("flex-grow", "1");
+
+        description.setText(movie.getDescription());
+        description.setWidth("100%");
+        description.getStyle().set("font-size", "var(--lumo-font-size-m)");
+
+        getContent().add(descriptionColumn);
+        descriptionColumn.add(descriptionLabel);
+        descriptionColumn.add(description);
+    }
+
+    private void createCastColumn() {
+        VerticalLayout castColumn = new VerticalLayout();
+        castColumn.setWidth("100%");
+        castColumn.getStyle().set("flex-grow", "1");
+        castColumn.setWidthFull();
+        getContent().add(castColumn);
+        H3 castLabel = new H3();
+        castLabel.setText("Cast");
+        castLabel.setWidth("max-content");
+        getContent().setFlexGrow(1.0, castColumn);
+        castColumn.add(castLabel);
+        setActorListData(castColumn);
+    }
+
+    private void createWhereToWatch(HorizontalLayout layoutRow5) {
+        H4 whereToWatchLabel = new H4();
+        whereToWatchLabel.setText("Where to watch:");
+        whereToWatchLabel.setWidth("max-content");
+
+        layoutRow5.add(whereToWatchLabel);
+
+        for(Platform platform : movie.getMoviePlatforms()){
+            Image image = new Image();
+            Anchor link = new Anchor();
+            link.setHref(platform.getLink());
+            link.setWidth("min-content");
+
+            if (platform.getPicture() != null) {
+                image.setSrc(platform.getPicture());
+                image.setWidth("100px");
+                link.add(image);
+            }else {
+                link.setText(platform.getLink());
+            }
+
+            layoutRow5.add(link);
+        }
+    }
+
+    private void generateGenreButtons(HorizontalLayout layoutRow4) {
+        for (MovieHasGenre movieGenre : movie.getMovieGenres()) {
+            String genreName = movieGenre.getGenre().getName();
+
+            Button genreButton = new Button();
+            genreButton.setText(genreName);
+            genreButton.setWidth("min-content");
+
+            // Create a RouterLink for navigation
+            RouterLink genreLink = new RouterLink("", MoviesView.class);
+            //RouterLink genreLink = new RouterLink("", MoviesView.class, movie.getId().toString());
+            genreLink.getElement().getStyle().set("text-decoration", "none");
+            genreLink.add(genreButton);
+
+            // Add the RouterLink to the layout
+            layoutRow4.add(genreLink);
+        }
     }
 
     private void createUnderTitleRow() {
@@ -141,7 +219,7 @@ public class MovieView extends Composite<VerticalLayout> {
         releaseDateLabel.setWidth("max-content");
         underTitleRow.add(releaseDateLabel);
 
-        createReleseDateText(underTitleRow, "20.20.2023");
+        createReleseDateText(underTitleRow, movie.getRelease_date().toString());
 
 
         VerticalLayout ratingColumn = new VerticalLayout();
@@ -206,18 +284,23 @@ public class MovieView extends Composite<VerticalLayout> {
         ratingNumberRow.add(ratingText);
     }
 
-    private void setAvatarItemsSampleData(MultiSelectListBox multiSelectListBox) {
-        record Person(String name, String profession) {
+    private void setActorListData(VerticalLayout verticalLayout) {
+        for (Cast cast : movie.getMovieCast()) {
+            Person person = cast.getPerson();
+            String roleName = cast.getRoleName();
+
+            ActorListItem actorListItem = new ActorListItem(person, roleName);
+            verticalLayout.add(actorListItem);
         }
-        ;
-        List<Person> data = List.of(new Person("Aria Bailey", "Endocrinologist"), new Person("Aaliyah Butler", "Nephrologist"), new Person("Eleanor Price", "Ophthalmologist"), new Person("Allison Torres", "Allergist"), new Person("Madeline Lewis", "Gastroenterologist"));
-        multiSelectListBox.setItems(data);
-        multiSelectListBox.setRenderer(new ComponentRenderer(item -> {
-            AvatarItem avatarItem = new AvatarItem();
-            avatarItem.setHeading(((Person) item).name);
-            avatarItem.setDescription(((Person) item).profession);
-            avatarItem.setAvatar(new Avatar(((Person) item).name));
-            return avatarItem;
-        }));
     }
+
+    private String getRoleForPerson(Person person) {
+        // Assuming a person may have multiple roles in different movies
+        // Adjust the logic based on your use case
+        return movie.getMovieCast().stream()
+                .filter(cast -> cast.getPerson().equals(person))
+                .map(Cast::getRoleName)
+                .collect(Collectors.joining(", "));
+    }
+
 }

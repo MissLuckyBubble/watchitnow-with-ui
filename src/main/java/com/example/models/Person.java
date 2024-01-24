@@ -1,16 +1,16 @@
 package com.example.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
+
 
 @Getter
 @Setter
@@ -29,4 +29,7 @@ public class Person extends MainModel {
     private LocalDate birthDate;
     @Column
     private String picture;
+
+    @OneToMany(mappedBy = "person", fetch = FetchType.EAGER)
+    private Set<Cast> casts = new HashSet<>();
 }

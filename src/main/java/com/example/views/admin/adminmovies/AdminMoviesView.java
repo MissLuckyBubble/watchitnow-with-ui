@@ -1,12 +1,7 @@
 package com.example.views.admin.adminmovies;
 
-import com.example.models.Genre;
 import com.example.models.Movie;
-import com.example.models.MovieHasGenre;
-import com.example.services.GenreService;
-import com.example.services.MovieHasGenreService;
-import com.example.services.MovieService;
-import com.example.services.PlatformService;
+import com.example.services.*;
 import com.example.views.MainLayout;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -39,10 +34,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
 import java.util.Optional;
-import java.util.stream.Collectors;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @PageTitle("Admin-Movies")
 @Route(value = "admin-movies/:movieID?/:action?(edit)", layout = MainLayout.class)
@@ -72,6 +63,7 @@ public class AdminMoviesView extends Div implements BeforeEnterObserver {
     private ConfirmDialog deleteDialog;
     private MovieGenresEditor genresEditor;
     private MoviePlatformEditor platformEditor;
+    private MovieCastEditor castEditor;
 
     private final BeanValidationBinder<Movie> binder;
 
@@ -81,15 +73,19 @@ public class AdminMoviesView extends Div implements BeforeEnterObserver {
     private final GenreService genreService;
     private final MovieHasGenreService movieHasGenreService;
     private final PlatformService platformService;
+    private final CastService castService;
+    private final PersonService personService;
 
     public AdminMoviesView(MovieService movieService,
                            GenreService genreService,
                            MovieHasGenreService movieHasGenreService,
-                           PlatformService platformService) {
+                           PlatformService platformService, CastService castService, PersonService personService) {
         this.movieService = movieService;
         this.genreService = genreService;
         this.movieHasGenreService = movieHasGenreService;
         this.platformService = platformService;
+        this.castService = castService;
+        this.personService = personService;
         addClassNames("admin-movies-view");
 
         // Create UI
@@ -177,14 +173,26 @@ public class AdminMoviesView extends Div implements BeforeEnterObserver {
             });
         });
 
+        editCast.addClickListener(e -> {
+            castEditor = new MovieCastEditor(movieService,movie, castService,personService);
+            add(castEditor);
+            castEditor.open();
+            castEditor.addDialogCloseActionListener(c->{
+                refreshGrid();
+                castEditor.close();
+            });
+        });
+
         save.addClickListener(e -> {
             try {
                 if (this.movie == null) {
                     this.movie = new Movie();
                     binder.writeBean(this.movie);
+                    movie.setTrailer(getTrailerEmbededLink(movie.getTrailer()));
                     movieService.create(this.movie);
                 } else {
                     binder.writeBean(this.movie);
+                    movie.setTrailer(getTrailerEmbededLink(movie.getTrailer()));
                     movieService.update(this.movie);
                 }
                 clearForm();
@@ -203,6 +211,26 @@ public class AdminMoviesView extends Div implements BeforeEnterObserver {
                 // Handle the exception or log information for further debugging
             }
         });
+    }
+
+    private String getTrailerEmbededLink(String trailer) {
+        String videoId = null;
+
+        if (trailer != null && trailer.trim().length() > 0) {
+            int index = trailer.indexOf("watch?v=");
+            if (index != -1) {
+                // Found "watch?v=" in the URL
+                videoId = trailer.substring(index + 8); // 8 is the length of "watch?v="
+            }else {
+                index = trailer.indexOf("/embed/");
+                if(index != -1){
+                    videoId = trailer.substring(index + 7); // 8 is the length of "/embed/"
+                }
+            }
+        }
+
+
+        return videoId == null ? trailer : "https://www.youtube.com/embed/" + videoId;
     }
 
     @Override

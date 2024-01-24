@@ -84,6 +84,10 @@ public class MoviePlatformEditor extends Dialog {
     public void removePlatformsFromMovie(Set<Platform> platforms) {
         if (!platforms.isEmpty()) {
             movie.getMoviePlatforms().removeAll(platforms);
+            for (Platform p : platforms){
+                p.getMovies().remove(movie);
+                platformService.update(p);
+            }
             movieService.update(movie);
             loadPlatforms();
         }

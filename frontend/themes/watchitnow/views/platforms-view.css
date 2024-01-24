@@ -1,0 +1,44 @@
+.admin-platforms {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.admin-platforms vaadin-split-layout {
+    width: 100%;
+    height: 100%;
+}
+
+.admin-platforms vaadin-grid {
+    height: 100%;
+}
+
+.admin-platforms .editor-layout {
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+}
+
+.admin-platforms .editor {
+    flex-grow: 1;
+    padding: var(--lumo-space-l);
+}
+
+.admin-platforms .editor vaadin-checkbox {
+    padding-top: var(--lumo-space-m);
+}
+
+.admin-platforms .button-layout {
+    width: 100%;
+    flex-wrap: wrap;
+    background-color: var(--lumo-contrast-5pct);
+    padding-bottom: var(--lumo-space-s);
+    padding-top: var(--lumo-space-s);
+    padding-left: var(--lumo-space-l);
+    padding-right: var(--lumo-space-l);
+    gap: var(--lumo-space-m);
+}
+
+.admin-platforms .grid-wrapper {
+    width: 100%;
+}

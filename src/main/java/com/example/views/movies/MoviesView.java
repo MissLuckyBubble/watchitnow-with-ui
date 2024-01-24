@@ -1,8 +1,10 @@
 package com.example.views.movies;
 
+import com.example.models.Movie;
+import com.example.services.MovieService;
 import com.example.views.MainLayout;
-import com.vaadin.flow.component.HasComponents;
-import com.vaadin.flow.component.HasStyle;
+import com.example.views.movie.MovieView;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Main;
 import com.vaadin.flow.component.html.OrderedList;
@@ -11,6 +13,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility.AlignItems;
@@ -24,30 +27,40 @@ import com.vaadin.flow.theme.lumo.LumoUtility.MaxWidth;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
 
+import java.util.Collections;
+import java.util.List;
+
 @PageTitle("Movies")
-@Route(value = "image-gallery", layout = MainLayout.class)
+@Route(value = "movies", layout = MainLayout.class)
 @AnonymousAllowed
 public class MoviesView extends Main implements HasComponents, HasStyle {
 
     private OrderedList imageContainer;
+    private final MovieService movieService;
 
-    public MoviesView() {
+    public MoviesView(MovieService movieService) {
+        this.movieService = movieService;
         constructUI();
 
-        imageContainer.add(new MoviesViewCard("Snow mountains under stars",
-                "https://images.unsplash.com/photo-1519681393784-d120267933ba?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80"));
-        imageContainer.add(new MoviesViewCard("Snow covered mountain",
-                "https://images.unsplash.com/photo-1512273222628-4daea6e55abb?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80"));
-        imageContainer.add(new MoviesViewCard("River between mountains",
-                "https://images.unsplash.com/photo-1536048810607-3dc7f86981cb?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=375&q=80"));
-        imageContainer.add(new MoviesViewCard("Milky way on mountains",
-                "https://images.unsplash.com/photo-1515705576963-95cad62945b6?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=750&q=80"));
-        imageContainer.add(new MoviesViewCard("Mountain with fog",
-                "https://images.unsplash.com/photo-1513147122760-ad1d5bf68cdb?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80"));
-        imageContainer.add(new MoviesViewCard("Mountain at night",
-                "https://images.unsplash.com/photo-1562832135-14a35d25edef?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=815&q=80"));
-
+        // Load movies from the service and display them
+        loadAndDisplayMovies();
     }
+
+    private void loadAndDisplayMovies() {
+        List<Movie> movies = movieService.findAll();
+        movies.forEach(movie -> {
+            MoviesViewCard movieCard = new MoviesViewCard(movie);
+            movieCard.addClickListener(event -> {
+                QueryParameters params
+                        = QueryParameters.simple(Collections.singletonMap("movieId", movie.getId().toString()));
+                UI.getCurrent().navigate(MovieView.class, params);
+            });
+            imageContainer.add(movieCard);
+        });
+    }
+
+
+
 
     private void constructUI() {
         addClassNames("movies-view");
@@ -57,10 +70,9 @@ public class MoviesView extends Main implements HasComponents, HasStyle {
         container.addClassNames(AlignItems.CENTER, JustifyContent.BETWEEN);
 
         VerticalLayout headerContainer = new VerticalLayout();
-        H2 header = new H2("Beautiful photos");
+        H2 header = new H2("Discover Amazing Movies");
         header.addClassNames(Margin.Bottom.NONE, Margin.Top.XLARGE, FontSize.XXXLARGE);
-        Paragraph description = new Paragraph("Royalty free photos and pictures, courtesy of Unsplash");
-        description.addClassNames(Margin.Bottom.XLARGE, Margin.Top.NONE, TextColor.SECONDARY);
+        Paragraph description = new Paragraph("Explore a collection of captivating movies from various genres.");description.addClassNames(Margin.Bottom.XLARGE, Margin.Top.NONE, TextColor.SECONDARY);
         headerContainer.add(header, description);
 
         Select<String> sortBy = new Select<>();
@@ -73,6 +85,5 @@ public class MoviesView extends Main implements HasComponents, HasStyle {
 
         container.add(headerContainer, sortBy);
         add(container, imageContainer);
-
     }
 }

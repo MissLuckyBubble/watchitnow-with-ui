@@ -172,8 +172,6 @@ public class MainLayout extends AppLayout {
 
                 new MenuItemInfo("Feed", LineAwesomeIcon.LIST_SOLID.create(), FeedView.class), //
 
-                new MenuItemInfo("Movie", LineAwesomeIcon.PENCIL_RULER_SOLID.create(), MovieView.class), //
-
         };
     }
 
