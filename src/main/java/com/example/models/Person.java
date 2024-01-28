@@ -30,6 +30,9 @@ public class Person extends MainModel {
     @Column
     private String picture;
 
+    @Column
+    private String details;
+
     @OneToMany(mappedBy = "person", fetch = FetchType.EAGER)
     private Set<Cast> casts = new HashSet<>();
 }

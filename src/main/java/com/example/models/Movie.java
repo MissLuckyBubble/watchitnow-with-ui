@@ -66,7 +66,7 @@ public class Movie extends MainModel{
             totalRate+= mR.getRating();
         }
 
-        if (!movieRatings.isEmpty()) {
+        if (movieRatings != null && !movieRatings.isEmpty() && movieRatings.size() != 0) {
             return totalRate / movieRatings.size();
         } else {
             return 0; // Default rate when there are no ratings

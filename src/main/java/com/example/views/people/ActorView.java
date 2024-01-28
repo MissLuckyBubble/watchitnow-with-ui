@@ -83,23 +83,20 @@ public class ActorView extends Composite<VerticalLayout> implements BeforeEnterO
     private void setRolesList(VerticalLayout actorDetailsLayout) {
         Set<Cast> castList = person.getCasts();
 
-        if (!castList.isEmpty()) {
+        if (castList != null && !castList.isEmpty()) {
             for (Cast cast : castList) {
                 String roleName = cast.getRoleName();
                 String movieTitle = cast.getMovie().getTitle();
 
-                // Create a clickable component to display the role and movie information
                 H3 roleAndMovieLabel = new H3();
                 roleAndMovieLabel.setText(roleName + " in " + movieTitle);
                 roleAndMovieLabel.setWidth("max-content");
 
-                // Set up the navigation to MovieView when clicked
                 roleAndMovieLabel.addClickListener(e -> navigateToMovie(cast.getMovie().getId()));
 
                 actorDetailsLayout.add(roleAndMovieLabel);
             }
         } else {
-            // Display a message if the actor has no roles
             actorDetailsLayout.add(new H3("This actor has no roles."));
         }
     }

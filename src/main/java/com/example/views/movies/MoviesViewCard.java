@@ -53,10 +53,13 @@ public class MoviesViewCard extends ListItem {
             castString += cast.getPerson().getName() + " " + cast.getPerson().getLastName() + ", ";
         }
 
-        if (!castString.isEmpty()) {
+        /*
+        if (castString != null && !castString.isEmpty()) {
             castString = castString.substring(0, castString.length() - 2);
         }
         subtitle.setText("Stars: " + castString );
+
+         */
 
         Paragraph description = new Paragraph(movie.getDescription());
         description.addClassName(Margin.Vertical.MEDIUM);

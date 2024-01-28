@@ -8,6 +8,7 @@ import com.example.views.admin.people.AdminPeopleView;
 import com.example.views.admin.platform.PlatformView;
 import com.example.views.helloworld.HelloWorldView;
 import com.example.views.movies.MoviesView;
+import com.example.views.people.ActorsView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.avatar.Avatar;
@@ -158,7 +159,9 @@ public class MainLayout extends AppLayout {
         return new MenuItemInfo[]{ //
                 new MenuItemInfo("Hello World", LineAwesomeIcon.GLOBE_SOLID.create(), HelloWorldView.class), //
 
-                new MenuItemInfo("Movies", LineAwesomeIcon.TH_LIST_SOLID.create(), MoviesView.class), //
+                new MenuItemInfo("Movies", LineAwesomeIcon.VIDEO_SOLID.create(), MoviesView.class), //
+
+                new MenuItemInfo("Actors", LineAwesomeIcon.USER_ALT_SOLID.create(), ActorsView.class), //
 
                 new MenuItemInfo("Admin-Movies", LineAwesomeIcon.COLUMNS_SOLID.create(), AdminMoviesView.class), //
 
