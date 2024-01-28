@@ -1,31 +1,33 @@
 package com.example.views.movie;
 
-import com.example.components.avataritem.AvatarItem;
 import com.example.models.*;
+import com.example.security.AuthenticatedUser;
 import com.example.services.MovieService;
 import com.example.views.MainLayout;
 import com.example.views.movies.MoviesView;
 import com.vaadin.flow.component.Composite;
-import com.vaadin.flow.component.avatar.Avatar;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.listbox.ListBox;
-import com.vaadin.flow.component.listbox.MultiSelectListBox;
+
 import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.data.renderer.ComponentRenderer;
+
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 
 @PageTitle("Movie")
 @Route(value = "movie", layout = MainLayout.class)
@@ -35,13 +37,18 @@ public class MovieView extends Composite<VerticalLayout> implements BeforeEnterO
 
     private final MovieService movieService;
     Movie movie;
+    private AuthenticatedUser authenticatedUser;
 
-    public MovieView(MovieService movieService) {
+    RatingDialog ratingDialog;
+
+    public MovieView(MovieService movieService, AuthenticatedUser authenticatedUser) {
         this.movieService = movieService;
+        this.authenticatedUser = authenticatedUser;
     }
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
+
         QueryParameters parameters = event.getLocation().getQueryParameters();
         Map<String, List<String>> parametersMap = parameters.getParameters();
         List<String> movieIdValues = parametersMap.get("movieId");
@@ -57,6 +64,8 @@ public class MovieView extends Composite<VerticalLayout> implements BeforeEnterO
         }else {
             return;
         }
+
+        ratingDialog = new RatingDialog(movie);
         H1 title = new H1();
         getContent().add(title);
         title.setText(movie.getTitle());
@@ -243,7 +252,7 @@ public class MovieView extends Composite<VerticalLayout> implements BeforeEnterO
         ratingNumberRow.setAlignItems(Alignment.END);
         underTitleRow.setAlignSelf(Alignment.END, ratingNumberRow);
 
-        createRatingText(ratingNumberRow, "8.99");
+        createRatingText(ratingNumberRow, String.valueOf(movie.getRate()));
 
 
         Icon ratingIcon = new Icon();
@@ -254,6 +263,7 @@ public class MovieView extends Composite<VerticalLayout> implements BeforeEnterO
         rateButton.setText("Rate");
         rateButton.setWidth("min-content");
         rateButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        rateButton.addClickListener(event -> openRatingDialog());
 
         underTitleRow.setWidthFull();
 
@@ -302,5 +312,11 @@ public class MovieView extends Composite<VerticalLayout> implements BeforeEnterO
                 .map(Cast::getRoleName)
                 .collect(Collectors.joining(", "));
     }
+
+    private void openRatingDialog() {
+        UI.getCurrent().navigate(MovieRatesView.class, QueryParameters.simple(Collections.singletonMap("movieId", String.valueOf(movie.getId()))));
+    }
+
+
 
 }

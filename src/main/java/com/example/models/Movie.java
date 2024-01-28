@@ -46,9 +46,30 @@ public class Movie extends MainModel{
     @OneToMany(mappedBy = "movie", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private Set<MovieHasGenre> movieGenres = new HashSet<>();
 
+    @OneToMany(mappedBy = "movie", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<UserRatesMovie> movieRatings = new HashSet<>();
+
+    @Column()
+    private float rate = 0;
+
     public Movie(){
         this.moviePlatforms = new HashSet<>();
         this.movieCast = new HashSet<>();
         this.movieGenres = new HashSet<>();
+        this.movieRatings = new HashSet<>();
+        this.rate = 0;
+    }
+
+    public int getRate() {
+        int totalRate = 0;
+        for (UserRatesMovie mR : movieRatings) {
+            totalRate+= mR.getRating();
+        }
+
+        if (!movieRatings.isEmpty()) {
+            return totalRate / movieRatings.size();
+        } else {
+            return 0; // Default rate when there are no ratings
+        }
     }
 }

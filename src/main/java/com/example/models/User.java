@@ -12,6 +12,7 @@ import com.example.data.Role;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -38,4 +39,7 @@ public class User extends MainModel {
     @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Role> roles;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private Set<UserRatesMovie> ratedMovies = new HashSet<>();
 }

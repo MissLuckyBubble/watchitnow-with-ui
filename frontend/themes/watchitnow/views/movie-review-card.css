@@ -1,69 +1,75 @@
-.feed-view {
+.movie-review-card {
   display: block;
   height: 100%;
 }
 
-.feed-view vaadin-grid {
+.movie-review-card vaadin-grid {
   height: 100%;
-  line-height: var(--lumo-line-height-m);
+  line-height: var(--lumo-line-height-s);
 }
 
-.feed-view vaadin-grid,
-.feed-view vaadin-grid-cell-content {
+.movie-reviews-grid vaadin-grid,
+.movie-reviews-grid vaadin-grid-cell-content {
   background-color: var(--lumo-contrast-10pct);
 }
 
-.feed-view .card {
+.movie-reviews-grid vaadin-grid::part(header) {
+  font-size: 48px;
+}
+
+.movie-review-card .content-layout {
   background-color: var(--lumo-base-color);
   border-radius: var(--lumo-border-radius);
   box-shadow: var(--lumo-box-shadow-xs);
   padding: calc(var(--lumo-space-s) * 1.5) var(--lumo-space-m);
 }
 
-.feed-view img {
+.movie-review-card img {
   border-radius: 50%;
   flex-shrink: 0;
-  height: var(--lumo-size-m);
+  height: var(--lumo-size-xl);
   margin-right: calc(var(--lumo-space-s) * 1.5);
-  width: var(--lumo-size-m);
+  width: var(--lumo-size-xl);
+  margin-top: 2%;
 }
 
-.feed-view .header {
+.movie-review-card .header {
   align-items: baseline;
 }
 
-.feed-view .name {
+.movie-review-card .username {
   font-size: var(--lumo-font-size-s);
   font-weight: bold;
   margin-right: var(--lumo-space-s);
 }
 
-.feed-view .date {
+.movie-review-card .date {
   color: var(--lumo-tertiary-text-color);
   font-size: var(--lumo-font-size-xs);
 }
 
-.feed-view .post {
+.movie-review-card .comment {
   color: var(--lumo-secondary-text-color);
   font-size: var(--lumo-font-size-s);
   margin-bottom: var(--lumo-space-s);
   white-space: normal;
 }
 
-.feed-view .actions {
+.movie-review-card .comment {
   align-items: center;
 }
 
-.feed-view .icon {
+.movie-review-card .icon {
   color: var(--lumo-tertiary-text-color);
   height: calc(var(--lumo-icon-size-s) * 0.8);
-  margin-right: var(--lumo-space-s);
+  margin-right: var(--lumo-space-s) * 5;
   width: calc(var(--lumo-icon-size-s) * 0.8);
+  margin-bottom: 5px;
 }
 
-.feed-view .likes,
-.feed-view .comments,
-.feed-view .shares {
+.movie-review-card .likes,
+.movie-review-card .comments,
+.movie-review-card .shares {
   color: var(--lumo-tertiary-text-color);
   font-size: var(--lumo-font-size-xs);
   margin-right: var(--lumo-space-l);

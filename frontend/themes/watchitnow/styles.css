@@ -1,7 +1,7 @@
 @import url('./main-layout.css');
 @import url('./views/movies-view.css');
 @import url('./views/admin-movies-view.css');
-@import url('./views/feed-view.css');
+@import url('views/movie-review-card.css');
 @import url('./views/movie-view.css');
 @import url('@fontsource/arvo/index.css');    html {
       --lumo-border-radius-s: calc(var(--lumo-size-m) / 6);

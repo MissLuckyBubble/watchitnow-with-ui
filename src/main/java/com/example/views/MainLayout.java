@@ -6,9 +6,7 @@ import com.example.views.admin.adminmovies.AdminMoviesView;
 import com.example.views.admin.genres.GenresView;
 import com.example.views.admin.people.AdminPeopleView;
 import com.example.views.admin.platform.PlatformView;
-import com.example.views.feed.FeedView;
 import com.example.views.helloworld.HelloWorldView;
-import com.example.views.movie.MovieView;
 import com.example.views.movies.MoviesView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -170,7 +168,6 @@ public class MainLayout extends AppLayout {
 
                 new MenuItemInfo("People", LineAwesomeIcon.LIST_SOLID.create(), AdminPeopleView.class), //
 
-                new MenuItemInfo("Feed", LineAwesomeIcon.LIST_SOLID.create(), FeedView.class), //
 
         };
     }
