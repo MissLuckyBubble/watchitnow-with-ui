@@ -12,4 +12,19 @@
   box-shadow: var(--lumo-box-shadow-s);
 }
 
+/* Default styles for larger screens */
+.seeMoreLayout {
+  width: 50%;
+  float: left;
+}
 
+
+/* Media query for smaller screens (adjust the screen size accordingly) */
+@media only screen and (max-width: 600px) {
+  .responsive-layout {
+    display: flex;
+    flex-direction: column; /* Stack items vertically on smaller screens */
+  }
+  .personLayout, .seeMoreLayout {
+  }
+}
