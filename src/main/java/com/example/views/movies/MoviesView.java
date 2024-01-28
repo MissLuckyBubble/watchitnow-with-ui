@@ -17,6 +17,7 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import com.vaadin.flow.theme.lumo.LumoUtility.AlignItems;
@@ -38,6 +39,7 @@ import java.util.stream.Collectors;
 
 @PageTitle("Movies")
 @Route(value = "movies", layout = MainLayout.class)
+@RouteAlias(value = "", layout = MainLayout.class)
 @AnonymousAllowed
 public class MoviesView extends Main implements HasComponents, HasStyle {
 
@@ -78,7 +80,7 @@ public class MoviesView extends Main implements HasComponents, HasStyle {
 
     private List<Movie> applySorting(List<Movie> movies) {
 
-        String genreValue = genreSelect.getValue().toString().trim().toLowerCase();
+        String genreValue = sortBy.getValue().toString().trim().toLowerCase();
         switch (genreValue) {
             case "newest first":
                 movies.sort((m1, m2) -> m2.getRelease_date().compareTo(m1.getRelease_date()));
