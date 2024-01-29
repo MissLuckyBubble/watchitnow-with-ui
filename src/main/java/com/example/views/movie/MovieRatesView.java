@@ -1,6 +1,7 @@
 package com.example.views.movie;
 
 import com.example.models.Movie;
+import com.example.models.Person;
 import com.example.models.User;
 import com.example.models.UserRatesMovie;
 import com.example.security.AuthenticatedUser;
@@ -10,6 +11,7 @@ import com.example.services.UserService;
 import com.example.views.MainLayout;
 import com.example.views.login.LoginView;
 import com.example.views.movies.MoviesView;
+import com.example.views.movies.MoviesViewCard;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -18,6 +20,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
@@ -25,8 +28,10 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.Lumo;
+import com.vaadin.flow.theme.lumo.LumoUtility;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @PageTitle("Rating")
 @Route(value = "movie-rates", layout = MainLayout.class)
@@ -41,6 +46,7 @@ public class MovieRatesView extends Composite<VerticalLayout> implements BeforeE
     private final AuthenticatedUser authenticatedUser;
     private User user;
     private UserRatesMovie userRatesMovie;
+    private OrderedList imageContainer;
 
 
     RatingStarsComponent ratingStars;
@@ -113,10 +119,21 @@ public class MovieRatesView extends Composite<VerticalLayout> implements BeforeE
         Collections.sort(userRatings, sortByUpdatedAt);
 
         movieReviewsGrid.setItems(userRatings);
+        VerticalLayout movieLayout = new VerticalLayout(titleLayout, yourRatingTitle, ratingStars, commentTextArea, submitButton, movieReviewsGrid);
+        movieLayout.setClassName("movieLayout");
 
+        VerticalLayout seeMoreLayout = getSeeMoreLayout();
+        seeMoreLayout.setClassName("seeMoreLayout");
 
+        FlexLayout flexLayout = new FlexLayout(movieLayout, seeMoreLayout);
+        flexLayout.getStyle().set("flexWrap", "wrap");
+        flexLayout.getStyle().set("flexWrap", "row");
+        flexLayout.getStyle().set("justifyContent", "space-around");
 
-        getContent().add(titleLayout, yourRatingTitle, ratingStars, commentTextArea, submitButton, movieReviewsGrid);
+        getContent().add(flexLayout);
+
+        flexLayout.addClassName("responsive-layout");
+
     }
 
     private Grid<UserRatesMovie> createMovieReviewsGrid() {
@@ -210,5 +227,57 @@ public class MovieRatesView extends Composite<VerticalLayout> implements BeforeE
 
             UI.getCurrent().getPage().reload();
         }
+    }
+
+    private VerticalLayout getSeeMoreLayout() {
+        VerticalLayout seeMoreLayout = new VerticalLayout();
+        seeMoreLayout.addClassNames(LumoUtility.AlignItems.CENTER);
+        seeMoreLayout.setWidth("50%");
+        seeMoreLayout.setMaxWidth("50%");
+        H2 seeMoreTitle = new H2("More to explore..");
+        imageContainer = new OrderedList();
+        imageContainer.addClassNames(LumoUtility.Gap.MEDIUM, LumoUtility.Display.GRID, LumoUtility.ListStyleType.NONE, LumoUtility.Margin.NONE, LumoUtility.Padding.NONE);
+        List<Movie> moreMovies = movieService.findAll().stream()
+                .filter(movie1 -> movie.getId() != movie1.getId() && !movie.getId().equals(movie1.getId()))
+                .sorted(
+                        Comparator.comparingInt(m-> -countCommonActors(movie, (Movie) m)).thenComparingInt(m -> -countCommonGenres(movie, (Movie) m))
+                )
+                .limit(3)
+                .collect(Collectors.toList());
+
+        addMoviesToImageContainer(moreMovies);
+        seeMoreLayout.add(seeMoreTitle,imageContainer);
+        return seeMoreLayout;
+    }
+
+    private void addMoviesToImageContainer(List<Movie> movies) {
+        imageContainer.removeAll();
+        movies.forEach(movie -> {
+            MoviesViewCard movieCard = new MoviesViewCard(movie);
+            movieCard.addClickListener(event -> {
+                QueryParameters params = QueryParameters.simple(
+                        Collections.singletonMap("movieId", movie.getId().toString()));
+                UI.getCurrent().navigate(MovieView.class, params);
+            });
+            imageContainer.add(movieCard);
+        });
+    }
+
+
+    private int countCommonActors(Movie movie1, Movie movie2) {
+        Set<Long> actorsIds1 = movie1.getMovieCast().stream().map(cast -> cast.getPerson().getId()).collect(Collectors.toSet());
+        Set<Long> actorsIds2 = movie2.getMovieCast().stream().map(cast -> cast.getPerson().getId()).collect(Collectors.toSet());
+
+        actorsIds1.retainAll(actorsIds2);
+
+        return actorsIds1.size();
+    }
+    private int countCommonGenres(Movie movie1, Movie movie2) {
+        Set<Long> castIds1 = movie1.getMovieGenres().stream().map(genre -> genre.getGenre().getId()).collect(Collectors.toSet());
+        Set<Long> castIds2 = movie2.getMovieGenres().stream().map(genre -> genre.getGenre().getId()).collect(Collectors.toSet());
+
+        castIds1.retainAll(castIds2);
+
+        return castIds1.size();
     }
 }
