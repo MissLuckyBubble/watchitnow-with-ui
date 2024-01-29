@@ -142,7 +142,7 @@ public class MoviesView extends Main implements HasComponents, HasStyle {
         sortBy.setLabel("Sort by");
         sortBy.setItems("Rating", "Newest first", "Oldest first");
         sortBy.setValue("Rating");
-        sortBy.addValueChangeListener(event -> addMoviesToImageConteiner(applySorting(allMovies)));
+        sortBy.addValueChangeListener(event->filterMovies(searchField.getValue()));
 
 
         genreSelect = new Select<>();
@@ -154,7 +154,7 @@ public class MoviesView extends Main implements HasComponents, HasStyle {
         allGenres.add(emptyGenreForAll);
         genreSelect.setItems(allGenres);
         genreSelect.setValue(emptyGenreForAll);
-        genreSelect.addValueChangeListener(event->addMoviesToImageConteiner(applyGenreFilter(allMovies)));
+        genreSelect.addValueChangeListener(event->filterMovies(searchField.getValue()));
 
         genreSelect.setRenderer(new ComponentRenderer<>(genre -> {
             String displayText = genre.getName();  // Display the genre name
