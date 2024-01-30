@@ -183,7 +183,7 @@ public class MovieView extends Composite<VerticalLayout> implements BeforeEnterO
 
         layoutRow5.add(whereToWatchLabel);
 
-        for(Platform platform : movie.getMoviePlatforms()){
+        for(Platform platform : movie.getPlatforms()){
             Image image = new Image();
             Anchor link = new Anchor();
             link.setHref(platform.getLink());
@@ -202,7 +202,7 @@ public class MovieView extends Composite<VerticalLayout> implements BeforeEnterO
     }
 
     private void generateGenreButtons(HorizontalLayout layoutRow4) {
-        for (MovieHasGenre movieGenre : movie.getMovieGenres()) {
+        for (MovieHasGenre movieGenre : movie.getGenres()) {
             String genreName = movieGenre.getGenre().getName();
 
             Button genreButton = new Button();
@@ -295,7 +295,7 @@ public class MovieView extends Composite<VerticalLayout> implements BeforeEnterO
     }
 
     private void setActorListData(VerticalLayout verticalLayout) {
-        for (Cast cast : movie.getMovieCast()) {
+        for (Cast cast : movie.getCast()) {
             Person person = cast.getPerson();
             String roleName = cast.getRoleName();
 
@@ -307,7 +307,7 @@ public class MovieView extends Composite<VerticalLayout> implements BeforeEnterO
     private String getRoleForPerson(Person person) {
         // Assuming a person may have multiple roles in different movies
         // Adjust the logic based on your use case
-        return movie.getMovieCast().stream()
+        return movie.getCast().stream()
                 .filter(cast -> cast.getPerson().equals(person))
                 .map(Cast::getRoleName)
                 .collect(Collectors.joining(", "));

@@ -44,7 +44,7 @@ public class MovieDTO extends BaseDTO<Movie> {
         setCreatedAt(entity.getCreatedAt());
         setUpdatedAt(entity.getUpdatedAt());
 
-        setMoviePlatforms(entity.getMoviePlatforms()
+        setMoviePlatforms(entity.getPlatforms()
                 .stream()
                 .map(PlatformDTO::new)
                 .collect(Collectors.toSet()));

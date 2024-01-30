@@ -1,7 +1,6 @@
 package com.example.views.movie;
 
 import com.example.models.Movie;
-import com.example.models.Person;
 import com.example.models.User;
 import com.example.models.UserRatesMovie;
 import com.example.security.AuthenticatedUser;
@@ -158,7 +157,7 @@ public class MovieRatesView extends Composite<VerticalLayout> implements BeforeE
 
         rating.add(ratingIcon, numberRating);
 
-        H5 totalRates = new H5("Users Voted: " + movie.getMovieRatings().size());
+        H5 totalRates = new H5("Users Voted: " + movie.getRatings().size());
 
         totalRateLayout.add(userRatingText,rating,totalRates);
 
@@ -198,13 +197,13 @@ public class MovieRatesView extends Composite<VerticalLayout> implements BeforeE
                 userRatesMovie.setUser(user);
 
             }else {
-                movie.getMovieRatings().remove(userRatesMovie);
+                movie.getRatings().remove(userRatesMovie);
                 user.getRatedMovies().remove(userRatesMovie);
             }
 
             userRatesMovie.setRating(rating);
             userRatesMovie.setComment(comment);
-            movie.getMovieRatings().add(userRatesMovie);
+            movie.getRatings().add(userRatesMovie);
             user.getRatedMovies().add(userRatesMovie);
 
 
@@ -265,16 +264,16 @@ public class MovieRatesView extends Composite<VerticalLayout> implements BeforeE
 
 
     private int countCommonActors(Movie movie1, Movie movie2) {
-        Set<Long> actorsIds1 = movie1.getMovieCast().stream().map(cast -> cast.getPerson().getId()).collect(Collectors.toSet());
-        Set<Long> actorsIds2 = movie2.getMovieCast().stream().map(cast -> cast.getPerson().getId()).collect(Collectors.toSet());
+        Set<Long> actorsIds1 = movie1.getCast().stream().map(cast -> cast.getPerson().getId()).collect(Collectors.toSet());
+        Set<Long> actorsIds2 = movie2.getCast().stream().map(cast -> cast.getPerson().getId()).collect(Collectors.toSet());
 
         actorsIds1.retainAll(actorsIds2);
 
         return actorsIds1.size();
     }
     private int countCommonGenres(Movie movie1, Movie movie2) {
-        Set<Long> castIds1 = movie1.getMovieGenres().stream().map(genre -> genre.getGenre().getId()).collect(Collectors.toSet());
-        Set<Long> castIds2 = movie2.getMovieGenres().stream().map(genre -> genre.getGenre().getId()).collect(Collectors.toSet());
+        Set<Long> castIds1 = movie1.getGenres().stream().map(genre -> genre.getGenre().getId()).collect(Collectors.toSet());
+        Set<Long> castIds2 = movie2.getGenres().stream().map(genre -> genre.getGenre().getId()).collect(Collectors.toSet());
 
         castIds1.retainAll(castIds2);
 

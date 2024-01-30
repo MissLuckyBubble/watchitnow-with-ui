@@ -1,7 +1,6 @@
 package com.example.views.movies;
 
 import com.example.models.Cast;
-import com.example.models.Genre;
 import com.example.models.Movie;
 import com.example.models.MovieHasGenre;
 import com.vaadin.flow.component.html.Div;
@@ -49,7 +48,7 @@ public class MoviesViewCard extends ListItem {
         Span subtitle = new Span();
         subtitle.addClassNames(FontSize.SMALL, TextColor.SECONDARY);
         String castString = "";
-        for (Cast cast : movie.getMovieCast()) {
+        for (Cast cast : movie.getCast()) {
             castString += cast.getPerson().getName() + " " + cast.getPerson().getLastName() + ", ";
         }
 
@@ -65,7 +64,7 @@ public class MoviesViewCard extends ListItem {
         description.addClassName(Margin.Vertical.MEDIUM);
 
         HorizontalLayout genreLayout = new HorizontalLayout();
-        for (MovieHasGenre genre: movie.getMovieGenres())
+        for (MovieHasGenre genre: movie.getGenres())
         {
             Span badge = new Span();
             badge.getElement().setAttribute("theme", "badge");

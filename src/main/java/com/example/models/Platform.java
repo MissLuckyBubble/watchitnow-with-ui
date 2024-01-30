@@ -23,6 +23,6 @@ public class Platform extends MainModel{
     private String link;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "moviePlatforms", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "platforms", fetch = FetchType.EAGER)
     private Set<Movie> movies = new HashSet<>();
 }

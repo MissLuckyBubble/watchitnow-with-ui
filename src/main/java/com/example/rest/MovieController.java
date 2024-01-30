@@ -101,10 +101,10 @@ public class MovieController {
             Movie movie = optionalMovie.get();
             Platform platform = optionalPlatform.get();
 
-            if (movie.getMoviePlatforms().contains(platform)) {
+            if (movie.getPlatforms().contains(platform)) {
                 return new ResponseEntity<>("Movie already is added to Platform.", HttpStatusCode.valueOf(200));
             } else {
-                movie.getMoviePlatforms().add(platform);
+                movie.getPlatforms().add(platform);
                 platform.getMovies().add(movie);
 
                 movieService.update(movie);
@@ -126,7 +126,7 @@ public class MovieController {
             Platform platform = optionalPlatform.get();
 
             // Add the movie to the platform
-            movie.getMoviePlatforms().remove(platform);
+            movie.getPlatforms().remove(platform);
             platform.getMovies().remove(movie);
 
             movieService.update(movie);
@@ -173,7 +173,7 @@ public class MovieController {
             return Collections.emptyList();
         } else {
             Movie movie = optionalMovie.get();
-            List<Cast> casts = new ArrayList<>(movie.getMovieCast());
+            List<Cast> casts = new ArrayList<>(movie.getCast());
             return casts.stream()
                     .map(this::convertToCastDTO)
                     .collect(Collectors.toList());

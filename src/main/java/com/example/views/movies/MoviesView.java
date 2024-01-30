@@ -93,7 +93,7 @@ public class MoviesView extends Main implements HasComponents, HasStyle {
                     int ratingComparison = Double.compare(m2.getRate(), m1.getRate());
                     if (ratingComparison == 0) {
                         // If ratings are equal, compare by the number of votes
-                        return Integer.compare(m2.getMovieRatings().size(), m1.getMovieRatings().size());
+                        return Integer.compare(m2.getRatings().size(), m1.getRatings().size());
                     }
                     return ratingComparison;
                 });
@@ -110,7 +110,7 @@ public class MoviesView extends Main implements HasComponents, HasStyle {
         Genre genreValue  = genreSelect.getValue();
         if (genreValue.getId() != -1L) {
             movies = movies.stream()
-                    .filter(movie -> movie.getMovieGenres()
+                    .filter(movie -> movie.getGenres()
                             .stream()
                             .anyMatch(movieHasGenre ->
                                     movieHasGenre.getGenre().getId().equals(genreValue.getId())))
@@ -192,7 +192,7 @@ public class MoviesView extends Main implements HasComponents, HasStyle {
                 .filter(movie ->
                         (movie.getTitle() + " " + movie.getRelease_date().format(DateTimeFormatter.BASIC_ISO_DATE)).toLowerCase().contains(filter.toLowerCase()) ||
                         movie.getDescription().toLowerCase().contains(filter.toLowerCase())||
-                        movie.getMovieCast().stream().anyMatch(
+                        movie.getCast().stream().anyMatch(
                                 cast -> (cast.getPerson().getName() + " " + cast.getPerson().getLastName()).toLowerCase().contains(filter.toLowerCase())
                         ))
                 .collect(Collectors.toList());

@@ -50,7 +50,7 @@ public class MovieCastEditor extends Dialog {
     }
 
     private void loadCast() {
-        Set<Cast> movieCast = movie.getMovieCast();
+        Set<Cast> movieCast = movie.getCast();
 
         castGrid.getColumns().forEach(castGrid::removeColumn);
 
@@ -91,7 +91,7 @@ public class MovieCastEditor extends Dialog {
             cast.setRoleName(roleName);
             castService.create(cast);
 
-            movie.getMovieCast().add(cast);
+            movie.getCast().add(cast);
             movieService.update(movie);
 
             person.getCasts().add(cast);
@@ -105,7 +105,7 @@ public class MovieCastEditor extends Dialog {
     @Transactional
     public void removePlatformsFromMovie(Set<Cast> casts) {
         if (!casts.isEmpty()) {
-            movie.getMovieCast().removeAll(casts);
+            movie.getCast().removeAll(casts);
             for (Cast c : casts){
                 c.getPerson().getCasts().remove(casts);
                 personService.update(c.getPerson());
@@ -118,7 +118,7 @@ public class MovieCastEditor extends Dialog {
     }
 
     private boolean hasExistingCast(Person person, String roleName) {
-        for (Cast cast : movie.getMovieCast()) {
+        for (Cast cast : movie.getCast()) {
             if (cast.getPerson().getId() == person.getId()
                     && cast.getRoleName().equals(roleName)) {
                 return true;

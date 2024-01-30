@@ -41,7 +41,7 @@ public class MoviePlatformEditor extends Dialog {
     }
 
     private void loadPlatforms() {
-        Set<Platform> moviePlatforms = movie.getMoviePlatforms();
+        Set<Platform> moviePlatforms = movie.getPlatforms();
 
         platformGrid.getDataProvider().refreshAll();
 
@@ -67,11 +67,11 @@ public class MoviePlatformEditor extends Dialog {
     @Transactional
     public void addPlatform(Platform platform) {
         if (platform != null) {
-            if (movie.getMoviePlatforms().contains(platform)) {
+            if (movie.getPlatforms().contains(platform)) {
                 Notification.show(movie.getTitle() + " already has this platform.");
                 return;
             }
-            movie.getMoviePlatforms().add(platform);
+            movie.getPlatforms().add(platform);
             platform.getMovies().add(movie);
 
             movieService.update(movie);
@@ -83,7 +83,7 @@ public class MoviePlatformEditor extends Dialog {
     @Transactional
     public void removePlatformsFromMovie(Set<Platform> platforms) {
         if (!platforms.isEmpty()) {
-            movie.getMoviePlatforms().removeAll(platforms);
+            movie.getPlatforms().removeAll(platforms);
             for (Platform p : platforms){
                 p.getMovies().remove(movie);
                 platformService.update(p);

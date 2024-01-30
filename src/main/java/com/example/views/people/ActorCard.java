@@ -2,6 +2,7 @@ package com.example.views.people;
 
 import com.example.models.Cast;
 import com.example.models.Person;
+import com.example.models.TvShow;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 

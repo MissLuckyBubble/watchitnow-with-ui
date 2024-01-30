@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
@@ -38,36 +37,36 @@ public class Movie extends MainModel{
             joinColumns = @JoinColumn(name = "movie_id"),
             inverseJoinColumns = @JoinColumn(name = "platform_id")
     )
-    private Set<Platform> moviePlatforms = new HashSet<>();
+    private Set<Platform> platforms = new HashSet<>();
 
     @OneToMany(mappedBy = "movie", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Cast> movieCast = new HashSet<>();
+    private Set<Cast> cast = new HashSet<>();
 
     @OneToMany(mappedBy = "movie", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private Set<MovieHasGenre> movieGenres = new HashSet<>();
+    private Set<MovieHasGenre> genres = new HashSet<>();
 
     @OneToMany(mappedBy = "movie", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<UserRatesMovie> movieRatings = new HashSet<>();
+    private Set<UserRatesMovie> ratings = new HashSet<>();
 
     @Column()
     private float rate = 0;
 
     public Movie(){
-        this.moviePlatforms = new HashSet<>();
-        this.movieCast = new HashSet<>();
-        this.movieGenres = new HashSet<>();
-        this.movieRatings = new HashSet<>();
+        this.platforms = new HashSet<>();
+        this.cast = new HashSet<>();
+        this.genres = new HashSet<>();
+        this.ratings = new HashSet<>();
         this.rate = 0;
     }
 
     public int getRate() {
         int totalRate = 0;
-        for (UserRatesMovie mR : movieRatings) {
+        for (UserRatesMovie mR : ratings) {
             totalRate+= mR.getRating();
         }
 
-        if (movieRatings != null && !movieRatings.isEmpty() && movieRatings.size() != 0) {
-            return totalRate / movieRatings.size();
+        if (ratings != null && !ratings.isEmpty() && ratings.size() != 0) {
+            return totalRate / ratings.size();
         } else {
             return 0; // Default rate when there are no ratings
         }

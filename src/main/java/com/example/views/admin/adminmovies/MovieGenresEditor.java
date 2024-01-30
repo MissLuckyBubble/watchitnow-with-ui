@@ -14,7 +14,6 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import jakarta.transaction.Transactional;
 
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -48,7 +47,7 @@ public class MovieGenresEditor extends Dialog {
     }
 
     private void loadGenres() {
-        Set<Genre> movieGenres = movie.getMovieGenres().stream()
+        Set<Genre> movieGenres = movie.getGenres().stream()
                 .map(MovieHasGenre::getGenre)
                 .collect(Collectors.toSet());
 
@@ -76,13 +75,13 @@ public class MovieGenresEditor extends Dialog {
     @Transactional
     public void addGenresToMovie(Genre genre) {
         if (genre != null) {
-            if (movie.getMovieGenres().stream().anyMatch(mhg -> mhg.getGenre().getId() == genre.getId())) {
+            if (movie.getGenres().stream().anyMatch(mhg -> mhg.getGenre().getId() == genre.getId())) {
                 Notification.show(movie.getTitle() + " already has this genre.");
                 return;
             }
             MovieHasGenre movieHasGenre = new MovieHasGenre(movie, genre);
             movieHasGenreService.create(movieHasGenre);
-            movie.getMovieGenres().add(movieHasGenre);
+            movie.getGenres().add(movieHasGenre);
             loadGenres();
         }
     }
@@ -91,14 +90,14 @@ public class MovieGenresEditor extends Dialog {
     public void removeGenresFromMovie(Set<Genre> selectedGenres) {
         if (!selectedGenres.isEmpty()) {
             Set<MovieHasGenre> movieHasGenresToRemove = selectedGenres.stream()
-                    .flatMap(genre -> movie.getMovieGenres().stream()
+                    .flatMap(genre -> movie.getGenres().stream()
                             .filter(movieHasGenre -> movieHasGenre.getGenre().equals(genre)))
                     .collect(Collectors.toSet());
 
             for (MovieHasGenre movieHasGenre : movieHasGenresToRemove) {
                 movieHasGenreService.remove(movieHasGenre.getId());
             }
-            movie.getMovieGenres().removeAll(movieHasGenresToRemove);
+            movie.getGenres().removeAll(movieHasGenresToRemove);
             movieService.update(movie);
             loadGenres();
         }
