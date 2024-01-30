@@ -1,6 +1,5 @@
 package com.example.views.people;
 
-import com.example.models.Genre;
 import com.example.models.Person;
 import com.example.services.PersonService;
 import com.example.views.MainLayout;
@@ -8,7 +7,10 @@ import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.HasStyle;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.Main;
+import com.vaadin.flow.component.html.OrderedList;
+import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
@@ -19,6 +21,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -89,7 +92,7 @@ public class ActorsView extends Main implements HasComponents, HasStyle {
 
         VerticalLayout mainContainer = new VerticalLayout();
         mainContainer.addClassNames("actors-view");
-        mainContainer.addClassNames(LumoUtility.MaxWidth.SCREEN_LARGE, LumoUtility.Margin.Horizontal.AUTO, LumoUtility.Padding.Bottom.LARGE, LumoUtility.Padding.Horizontal.MEDIUM, LumoUtility.AlignItems.CENTER, LumoUtility.JustifyContent.BETWEEN );
+        mainContainer.addClassNames(LumoUtility.MaxWidth.SCREEN_LARGE, LumoUtility.Margin.Horizontal.AUTO, LumoUtility.Padding.Bottom.LARGE, LumoUtility.Padding.Horizontal.MEDIUM, LumoUtility.AlignItems.CENTER, LumoUtility.JustifyContent.BETWEEN);
 
         HorizontalLayout container = new HorizontalLayout();
         container.addClassNames(LumoUtility.AlignItems.CENTER, LumoUtility.JustifyContent.BETWEEN);
@@ -113,7 +116,7 @@ public class ActorsView extends Main implements HasComponents, HasStyle {
         HorizontalLayout searchLayout = getSearchLayout();
 
         container.add(headerContainer, sortBy);
-        mainContainer.add(container,searchLayout,imageContainer);
+        mainContainer.add(container, searchLayout, imageContainer);
         add(mainContainer);
     }
 
@@ -136,9 +139,11 @@ public class ActorsView extends Main implements HasComponents, HasStyle {
         String filterLC = filter.toLowerCase();
         List<Person> filteredActors = allActors.stream()
                 .filter(person ->
-                        (person.getName() + " " + person.getLastName()).toLowerCase().contains(filterLC)||
-                        person.getCasts().stream().anyMatch(cast -> cast.getMovie().getTitle().toLowerCase().contains(filterLC))
-                       )
+                        (person.getName() + " " + person.getLastName()).toLowerCase().contains(filterLC) ||
+                                person.getCasts().stream().
+                                        anyMatch(cast -> (cast.getMovie().getTitle() + " " + cast.getMovie().getRelease_date().format(DateTimeFormatter.BASIC_ISO_DATE)).
+                                                toLowerCase().contains(filterLC)) ||
+                                (person.getDetails() != null && person.getDetails().toLowerCase().contains(filterLC)))
                 .collect(Collectors.toList());
 
         addActorsToImageContainer(applySorting(filteredActors));
