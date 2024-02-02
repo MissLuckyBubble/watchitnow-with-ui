@@ -1,6 +1,7 @@
 @import url('./main-layout.css');
 @import url('./views/movies-view.css');
 @import url('./views/admin-movies-view.css');
+@import url('./views/admin-seasons-view.css');
 @import url('views/movie-review-card.css');
 @import url('./views/movie-view.css');
 @import url('./views/actors-view.css');
