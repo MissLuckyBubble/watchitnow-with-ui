@@ -48,6 +48,7 @@ public class MoviesView extends Main implements HasComponents, HasStyle {
     private final GenreService genreService;
     Select<String> sortBy;
     Select<Genre> genreSelect;
+    Select<String> mediaSelect;
     TextField searchField;
     List<Movie> allMovies;
 
@@ -105,6 +106,27 @@ public class MoviesView extends Main implements HasComponents, HasStyle {
         return movies;
     }
 
+    private List<Movie> applyMediaSelect(List<Movie> movies) {
+        String genreValue = mediaSelect.getValue().toString().trim().toLowerCase();
+        switch (genreValue) {
+            case "movies":
+                return movies.stream()
+                        .filter(m -> !Boolean.TRUE.equals(m.getIsTvShow()))
+                        .collect(Collectors.toList());
+            case "tv shows":
+                List<Movie> tvShows = movies.stream()
+                        .filter(movie -> Boolean.TRUE.equals(movie.getIsTvShow()))
+                        .collect(Collectors.toList());
+
+                return tvShows;
+            default:
+                return movies;
+
+        }
+    }
+
+
+
     private List<Movie> applyGenreFilter(List<Movie> movies) {
 
         Genre genreValue  = genreSelect.getValue();
@@ -144,6 +166,12 @@ public class MoviesView extends Main implements HasComponents, HasStyle {
         sortBy.setValue("Rating");
         sortBy.addValueChangeListener(event->filterMovies(searchField.getValue()));
 
+        mediaSelect = new Select<>();
+        mediaSelect.setLabel("Choose Media");
+        mediaSelect.setItems("All", "Movies", "Tv Shows");
+        mediaSelect.setValue("All");
+        mediaSelect.addValueChangeListener(event->filterMovies(searchField.getValue()));
+
 
         genreSelect = new Select<>();
         genreSelect.setLabel("Genre");
@@ -167,7 +195,7 @@ public class MoviesView extends Main implements HasComponents, HasStyle {
 
         HorizontalLayout searchLayout = getSearchLayout();
 
-        container.add(headerContainer, sortBy, genreSelect);
+        container.add(headerContainer,mediaSelect, genreSelect, sortBy);
         mainContainer.add(container,searchLayout,imageContainer);
         add(mainContainer);
     }
@@ -196,6 +224,6 @@ public class MoviesView extends Main implements HasComponents, HasStyle {
                                 cast -> (cast.getPerson().getName() + " " + cast.getPerson().getLastName()).toLowerCase().contains(filter.toLowerCase())
                         ))
                 .collect(Collectors.toList());
-        addMoviesToImageConteiner(applySorting(applyGenreFilter(filteredMovies)));
+        addMoviesToImageConteiner(applySorting(applyGenreFilter(applyMediaSelect(filteredMovies))));
     }
 }

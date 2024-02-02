@@ -6,6 +6,7 @@ import com.example.views.admin.adminmovies.AdminMoviesView;
 import com.example.views.admin.genres.GenresView;
 import com.example.views.admin.people.AdminPeopleView;
 import com.example.views.admin.platform.PlatformView;
+import com.example.views.admin.seasons.AdminSeasonsView;
 import com.example.views.helloworld.HelloWorldView;
 import com.example.views.movies.MoviesView;
 import com.example.views.people.ActorsView;
@@ -158,11 +159,13 @@ public class MainLayout extends AppLayout {
     private MenuItemInfo[] createMenuItems() {
         return new MenuItemInfo[]{ //
 
-                new MenuItemInfo("Movies", LineAwesomeIcon.VIDEO_SOLID.create(), MoviesView.class), //
+                new MenuItemInfo("Media", LineAwesomeIcon.VIDEO_SOLID.create(), MoviesView.class), //
 
                 new MenuItemInfo("Actors", LineAwesomeIcon.USER_ALT_SOLID.create(), ActorsView.class), //
 
                 new MenuItemInfo("Admin-Movies", LineAwesomeIcon.COLUMNS_SOLID.create(), AdminMoviesView.class), //
+
+                new MenuItemInfo("Admin-Seasons", LineAwesomeIcon.COLUMNS_SOLID.create(), AdminSeasonsView.class), //
 
                 new MenuItemInfo("Genres", LineAwesomeIcon.LIST_SOLID.create(), GenresView.class), //
 

@@ -6,6 +6,7 @@ import com.example.views.MainLayout;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dependency.Uses;
@@ -52,6 +53,7 @@ public class AdminMoviesView extends Div implements BeforeEnterObserver {
     private TextField trailer;
     private TextField poster_url;
     private TextArea description;
+    private Checkbox isTvShowCheckbox;
 
     private final Button cancel = new Button("Cancel");
     private final Button save = new Button("Save");
@@ -102,21 +104,6 @@ public class AdminMoviesView extends Div implements BeforeEnterObserver {
         grid.addColumn("trailer").setWidth("100px").setHeader("Trailer");
         grid.addColumn("poster_url").setWidth("100px").setHeader("Poster URL");
         grid.addColumn("description").setWidth("100px").setHeader("Description");
-        /*grid.addColumn(movie -> {
-                    Set<MovieHasGenre> movieHasGenres = movie.getMovieGenres();
-                    if (movieHasGenres != null && !movieHasGenres.isEmpty()) {
-                        return movieHasGenres.stream()
-                                .map(MovieHasGenre::getGenre)
-                                .map(Genre::getName)
-                                .collect(Collectors.joining(", "));
-                    }
-                    return "";
-                })
-                .setKey("movieGenres")
-                .setHeader("Genres")
-                .setAutoWidth(true);
-        grid.addColumn("movieCast").setAutoWidth(true).setHeader("Cast");
-        grid.addColumn("moviePlatforms").setAutoWidth(true).setHeader("Platforms");*/
 
 
         grid.setItems(query -> {
@@ -143,7 +130,8 @@ public class AdminMoviesView extends Div implements BeforeEnterObserver {
         binder = new BeanValidationBinder<>(Movie.class);
 
         binder.bindInstanceFields(this);
-
+        binder.forField(isTvShowCheckbox)
+                .bind(Movie::getIsTvShow, Movie::setIsTvShow);
 
         cancel.addClickListener(e -> {
             clearForm();
@@ -274,7 +262,10 @@ public class AdminMoviesView extends Div implements BeforeEnterObserver {
         DatePicker.DatePickerI18n i18n = new DatePicker.DatePickerI18n();
         i18n.setDateFormat("dd.MM.yyyy");
         release_date.setI18n(i18n);
-        formLayout.add(title, trailer, poster_url, description, release_date);
+
+        isTvShowCheckbox = new Checkbox("Is TV Show");
+
+        formLayout.add(title, trailer, poster_url, description, release_date,isTvShowCheckbox);
 
         editorDiv.add(formLayout);
         createButtonLayout(editorLayoutDiv);

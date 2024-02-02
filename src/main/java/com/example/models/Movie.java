@@ -31,6 +31,10 @@ public class Movie extends MainModel{
     private String description;
     @Column(nullable = false)
     private String poster_url;
+
+    @Column(name = "ISTVSHOW")
+    private Boolean isTvShow;
+
     @JsonIgnore
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(name = "movie_is_on_platform",
@@ -48,6 +52,9 @@ public class Movie extends MainModel{
     @OneToMany(mappedBy = "movie", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserRatesMovie> ratings = new HashSet<>();
 
+    @OneToMany(mappedBy = "movie", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Season> seasons = new HashSet<>();
+
     @Column()
     private float rate = 0;
 
@@ -57,6 +64,8 @@ public class Movie extends MainModel{
         this.genres = new HashSet<>();
         this.ratings = new HashSet<>();
         this.rate = 0;
+        this.isTvShow = false;
+        this.seasons = new HashSet<>();
     }
 
     public int getRate() {

@@ -104,7 +104,7 @@ public class MovieCastEditor extends Dialog {
 
     @Transactional
     public void removePlatformsFromMovie(Set<Cast> casts) {
-        if (!casts.isEmpty()) {
+        if (casts != null && !casts.isEmpty()) {
             movie.getCast().removeAll(casts);
             for (Cast c : casts){
                 c.getPerson().getCasts().remove(casts);

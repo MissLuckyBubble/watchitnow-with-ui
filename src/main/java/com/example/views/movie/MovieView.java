@@ -10,6 +10,8 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.Uses;
+import com.vaadin.flow.component.details.Details;
+import com.vaadin.flow.component.details.DetailsVariant;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.Icon;
 
@@ -22,11 +24,14 @@ import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.Comparator;
+
 
 
 @PageTitle("Movie")
@@ -48,6 +53,7 @@ public class MovieView extends Composite<VerticalLayout> implements BeforeEnterO
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
+
 
         QueryParameters parameters = event.getLocation().getQueryParameters();
         Map<String, List<String>> parametersMap = parameters.getParameters();
@@ -133,10 +139,71 @@ public class MovieView extends Composite<VerticalLayout> implements BeforeEnterO
 
         layoutRow4.add(layoutRow5);
         createWhereToWatch(layoutRow5);
-
+        if(movie.getIsTvShow()) {
+            createTVShowSection();
+        }
         createCastColumn();
         createDescriptionColumn();
     }
+
+
+    private void createTVShowSection() {
+        VerticalLayout tvShowSection = new VerticalLayout();
+        tvShowSection.setWidth("100%");
+
+        H3 tvShowLabel = new H3("Seasons");
+        tvShowLabel.setWidth("max-content");
+        tvShowSection.add(tvShowLabel);
+
+        UnorderedList seasons = new UnorderedList();
+
+        List<Season> tvShowSeasons = movie.getSeasons().stream()
+                .sorted(Comparator.comparing(Season::getFirstEpisodeRelease))
+                .toList();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+
+        int totalNumberOfEpisodes = 0;
+
+        for (Season season : tvShowSeasons) {
+
+            totalNumberOfEpisodes += season.getNumberOfEpisodes();
+
+            ListItem seasonItem = new ListItem();
+
+            // Create a component to represent the season (e.g., Div, VerticalLayout)
+            Div seasonInfo = new Div();
+
+            // Add information about the season (customize based on your needs)
+            seasonInfo.add(new H4("Season " + season.getSeasonNumber()));
+            seasonInfo.add(new Paragraph("Number of Episodes: " + season.getNumberOfEpisodes()));
+            seasonInfo.add(new Paragraph("Release Date: " + season.getFirstEpisodeRelease().format(formatter)));
+            seasonInfo.add(new Paragraph("Last Episode Release Date: " + season.getLastEpisodeRelease().format(formatter)));
+
+            // Add the component to the list item
+            seasonItem.add(seasonInfo);
+
+            // Add the list item to the unordered list
+            seasons.add(seasonItem);
+        }
+
+        if(tvShowSeasons!= null && !tvShowSeasons.isEmpty()){
+            Season firstSeason = tvShowSeasons.get(0);
+            Season lastSeason = tvShowSeasons.get(tvShowSeasons.size() - 1);
+            getContent()
+                    .add(new H2("Tv series " +
+                            firstSeason.getFirstEpisodeRelease().format(formatter)
+                                    + " - "
+                                    + lastSeason.getLastEpisodeRelease().format(formatter)));
+        }
+        getContent().add(new H3("Number of episodes: " + totalNumberOfEpisodes ));
+        Details details = new Details("Number of seasons: " + tvShowSeasons.size(), seasons);
+        details.setOpened(false);
+        details.addThemeVariants(DetailsVariant.REVERSE);
+
+        tvShowSection.add(details);
+        getContent().add(tvShowSection);
+    }
+
 
     private void createDescriptionColumn() {
         VerticalLayout descriptionColumn = new VerticalLayout();
